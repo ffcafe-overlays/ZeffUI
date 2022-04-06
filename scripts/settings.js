@@ -1040,7 +1040,7 @@ function getBarColors() {
         .filter(
             (sheet) =>
                 sheet.href === null ||
-                sheet.href.startsWith(window.location.origin),
+                !sheet.href.toString().includes('3rdparty'),
         )
         .reduce(
             (acc, sheet) =>
