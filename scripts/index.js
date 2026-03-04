@@ -806,6 +806,10 @@ function loadContextMenu() {
                     setUILanguageAndReload("kr");
                     break;
                 }
+                case "tc": {
+                    setUILanguageAndReload("tc");
+                    break;
+                }
             }
             if (key.includes("profile_")) {
                 let profile = key.split("_")[1];
@@ -844,6 +848,7 @@ function loadContextMenu() {
                     jp: { name: "日本語", icon: "jp" },
                     cn: { name: "中文", icon: "cn" },
                     kr: { name: "한국어", icon: "kr" },
+                    tc: { name: "繁體中文", icon: "cn" },
                 },
             },
             sep1: "---------",
@@ -1941,6 +1946,7 @@ function checkForParty(e) {
     let combatants = e.combatants;
     if (combatants === undefined || gameState.player === undefined) return;
     let player = combatants.find((x) => x.ID === gameState.player.id);
+	if (!player) return;
     let hasCombatants = false;
     if (Object.prototype.hasOwnProperty.call(player, "PartyType")) {
         hasCombatants = player.PartyType !== 0;
@@ -2657,6 +2663,9 @@ function handleAbilityTTS(ability, selector, onYou = true) {
             break;
         case "kr":
             name = ability.name_kr;
+            break;
+        case "tc":
+            name = ability.name_cn;
             break;
         default:
             break;
@@ -3534,8 +3543,7 @@ function handleGainEffect(parameters) {
 
     for (ability of mergedAbilityList.filter(
         (x) =>
-            x[`name_${currentSettings.language}`].toLowerCase() ==
-            parameters.effect.toLowerCase(),
+            (x[`name_${currentSettings.language}`] || x.name_en || x.name || "").toLowerCase() == parameters.effect.toLowerCase(),
     )) {
         if (ability === undefined) continue;
         if (
@@ -3696,8 +3704,7 @@ function handleLoseEffect(parameters) {
     );
     for (ability of mergedAbilityList.filter(
         (x) =>
-            x[`name_${currentSettings.language}`].toLowerCase() ==
-            parameters.effect.toLowerCase(),
+           (x[`name_${currentSettings.language}`] || x.name_en || x.name || "").toLowerCase() == parameters.effect.toLowerCase(),
     )) {
         if (ability.name == "Standard Step") return;
         if (ability.name == "Technical Step") return;
